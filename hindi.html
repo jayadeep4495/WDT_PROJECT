@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Movieblast – Hindi Movies</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{--red:#e50914;--red-dark:#b00710;--gold:#f5a623;--bg:#0a0a0a;--surface:#141414;--surface2:#1f1f1f;--surface3:#2a2a2a;--text:#fff;--muted:#aaa;--border:rgba(255,255,255,.1);--nav-h:68px}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:#111}::-webkit-scrollbar-thumb{background:var(--red);border-radius:3px}
+.navbar{position:fixed;top:0;left:0;right:0;z-index:1000;height:var(--nav-h);padding:0 4%;display:flex;align-items:center;justify-content:space-between;transition:background .4s,box-shadow .4s}
+.navbar.scrolled{background:rgba(10,10,10,.97);box-shadow:0 2px 20px rgba(0,0,0,.5)}
+.navbar-bg-gradient{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.9) 0%,transparent 100%);z-index:-1;pointer-events:none}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;color:var(--red);letter-spacing:2px;text-decoration:none;filter:drop-shadow(0 0 15px rgba(229,9,20,.5));animation:logoPulse 3s ease-in-out infinite}
+@keyframes logoPulse{0%,100%{filter:drop-shadow(0 0 15px rgba(229,9,20,.4))}50%{filter:drop-shadow(0 0 30px rgba(229,9,20,.9))}}
+.nav-links{display:flex;align-items:center;gap:.2rem;list-style:none}
+.nav-links a{color:rgba(255,255,255,.75);text-decoration:none;font-size:.9rem;font-weight:500;padding:.5rem .9rem;border-radius:8px;transition:all .3s;position:relative}
+.nav-links a:hover,.nav-links a.active{color:#fff}
+.nav-links a.active::after{content:'';position:absolute;bottom:-2px;left:50%;transform:translateX(-50%);width:20px;height:3px;background:var(--red);border-radius:2px}
+.nav-right{display:flex;align-items:center;gap:1rem}
+.nav-avatar{width:36px;height:36px;border-radius:8px;background:var(--red);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem;cursor:pointer;transition:transform .3s,box-shadow .3s}
+.nav-avatar:hover{transform:scale(1.1);box-shadow:0 0 15px rgba(229,9,20,.4)}
+.hamburger{display:none;background:none;border:none;color:var(--text);font-size:1.3rem;cursor:pointer}
+.page-hero{position:relative;height:360px;margin-top:var(--nav-h);overflow:hidden;display:flex;align-items:flex-end}
+.page-hero-bg{position:absolute;inset:0;background-image:url('https://images.indianexpress.com/2025/01/pushpa-2-box-office.jpg?w=1200');background-size:cover;background-position:center 25%;transition:transform 8s ease}
+.page-hero:hover .page-hero-bg{transform:scale(1.04)}
+.page-hero-overlay{position:absolute;inset:0;background:linear-gradient(to right,rgba(0,0,0,.92) 0%,rgba(0,0,0,.5) 60%,rgba(0,0,0,.15) 100%),linear-gradient(to top,rgba(10,10,10,1) 0%,rgba(0,0,0,.2) 50%,transparent 100%)}
+.page-hero-content{position:relative;z-index:2;padding:0 4% 2.5rem}
+.page-hero-badge{display:inline-flex;align-items:center;gap:.45rem;background:rgba(229,9,20,.18);border:1px solid rgba(229,9,20,.4);border-radius:20px;padding:.28rem .85rem;font-size:.74rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--red);margin-bottom:.7rem}
+.page-hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.8rem,6vw,5rem);line-height:1;letter-spacing:2px;text-shadow:0 4px 25px rgba(0,0,0,.6);margin-bottom:.6rem}
+.page-hero-meta{display:flex;align-items:center;gap:.9rem;flex-wrap:wrap}
+.page-hero-meta span{font-size:.82rem;color:rgba(255,255,255,.65)}
+.page-hero-meta .quality{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:4px;padding:.14rem .5rem;font-size:.72rem;font-weight:700}
+.filter-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:1rem 4%;display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;position:sticky;top:var(--nav-h);z-index:100}
+.search-wrap{position:relative;flex:1;max-width:380px}
+.search-wrap input{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:.6rem 1rem .6rem 2.6rem;border-radius:8px;font-family:'Outfit',sans-serif;font-size:.85rem;outline:none;transition:all .3s}
+.search-wrap input::placeholder{color:var(--muted)}
+.search-wrap input:focus{border-color:rgba(229,9,20,.5);box-shadow:0 0 0 3px rgba(229,9,20,.1)}
+.search-wrap i{position:absolute;left:.85rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:.82rem}
+.genre-pills{display:flex;gap:.45rem;flex-wrap:wrap}
+.genre-pill{padding:.38rem .95rem;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'Outfit',sans-serif;font-size:.78rem;font-weight:500;cursor:pointer;transition:all .25s;white-space:nowrap}
+.genre-pill:hover,.genre-pill.active{background:var(--red);border-color:var(--red);color:#fff;font-weight:700}
+.sort-select{margin-left:auto;background:var(--surface2);border:1px solid var(--border);color:var(--muted);padding:.4rem .85rem;border-radius:8px;font-family:'Outfit',sans-serif;font-size:.8rem;outline:none;cursor:pointer}
+.sort-select option{background:var(--surface2)}
+.section-wrap{padding:2.5rem 4% 1rem}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.6rem}
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:.5px;display:flex;align-items:center;gap:.6rem}
+.section-title span{display:inline-block;width:4px;height:1.25rem;background:var(--red);border-radius:2px}
+.movie-count-badge{background:rgba(229,9,20,.15);border:1px solid rgba(229,9,20,.3);color:var(--red);font-size:.75rem;font-weight:700;padding:.25rem .7rem;border-radius:20px}
+.movies-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:1.4rem;padding-bottom:3rem}
+.movie-card{border-radius:10px;overflow:hidden;cursor:pointer;position:relative;background:var(--surface2);transition:transform .4s cubic-bezier(.22,1,.36,1),box-shadow .4s;animation:cardIn .5s ease both}
+.movie-card:hover{transform:scale(1.07) translateY(-8px);box-shadow:0 25px 55px rgba(0,0,0,.8),0 0 0 1px rgba(229,9,20,.22);z-index:10}
+@keyframes cardIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.card-poster{width:100%;aspect-ratio:2/3;position:relative;overflow:hidden;background:var(--surface3)}
+.card-poster img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}
+.movie-card:hover .card-poster img{transform:scale(1.06)}
+.card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.97) 0%,rgba(0,0,0,.35) 50%,transparent 100%);opacity:0;transition:opacity .35s;display:flex;flex-direction:column;justify-content:flex-end;padding:.85rem .8rem}
+.movie-card:hover .card-overlay{opacity:1}
+.card-actions{display:flex;gap:.42rem;margin-bottom:.55rem}
+.ca-btn{width:33px;height:33px;border-radius:50%;border:2px solid rgba(255,255,255,.6);background:rgba(0,0,0,.55);backdrop-filter:blur(4px);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.7rem;cursor:pointer;transition:all .2s}
+.ca-btn.play{background:var(--red);border-color:var(--red);width:38px;height:38px;font-size:.9rem}
+.ca-btn:hover{transform:scale(1.12)}
+.card-ov-title{font-size:.8rem;font-weight:700;line-height:1.25;margin-bottom:.15rem}
+.card-ov-meta{font-size:.65rem;color:rgba(255,255,255,.5)}
+.card-tag{position:absolute;top:.5rem;left:.5rem;z-index:2;background:var(--red);border-radius:4px;padding:.14rem .42rem;font-size:.63rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+.card-tag.new-tag{background:#1a7a1a}
+.card-tag.classic-tag{background:#7a5500}
+.card-rating{position:absolute;top:.5rem;right:.5rem;z-index:2;background:rgba(0,0,0,.72);backdrop-filter:blur(4px);color:var(--gold);font-size:.68rem;font-weight:700;padding:.2rem .44rem;border-radius:4px;display:flex;align-items:center;gap:.2rem}
+.card-footer{padding:.7rem .8rem .65rem}
+.card-footer h6{font-size:.84rem;font-weight:600;margin-bottom:.18rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-footer p{font-size:.68rem;color:var(--muted)}
+.toast-wrap{position:fixed;top:var(--nav-h);left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;align-items:center;gap:.5rem;pointer-events:none}
+.toast-item{background:rgba(20,20,20,.97);border:1px solid var(--border);border-radius:20px;padding:.6rem 1.3rem;font-size:.84rem;white-space:nowrap;box-shadow:0 8px 25px rgba(0,0,0,.5);animation:toastPop .4s cubic-bezier(.22,1,.36,1) both;font-family:'Outfit',sans-serif}
+@keyframes toastPop{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+.modal-content{background:var(--surface);border:1px solid rgba(255,255,255,.07);border-radius:18px;color:var(--text);overflow:hidden}
+.modal-poster-wrap{height:320px;position:relative;overflow:hidden}
+.modal-poster-wrap img{width:100%;height:100%;object-fit:cover;display:block}
+.modal-poster-art{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:5rem;background:var(--surface2)}
+.modal-overlay-grad{position:absolute;inset:0;background:linear-gradient(to top,var(--surface) 0%,transparent 60%)}
+.modal-close-btn{position:absolute;top:1rem;right:1rem;z-index:10;background:rgba(0,0,0,.7);border:1px solid rgba(255,255,255,.12);color:#fff;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.95rem;transition:all .2s}
+.modal-close-btn:hover{background:var(--red);border-color:var(--red)}
+.modal-body{padding:1.3rem 2rem 2rem}
+.modal-film-title{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:1.5px;line-height:1;margin-bottom:.5rem}
+.modal-tags-row{display:flex;gap:.4rem;flex-wrap:wrap;margin:.65rem 0}
+.modal-tag{font-size:.7rem;padding:.2rem .6rem;border-radius:4px;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.5)}
+.modal-desc{color:rgba(255,255,255,.62);font-size:.87rem;line-height:1.7;margin:1rem 0 1.3rem}
+.modal-cast{font-size:.79rem;color:rgba(255,255,255,.42);margin-bottom:1.4rem}
+.modal-cast strong{color:rgba(255,255,255,.72)}
+.modal-actions{display:flex;gap:.75rem;flex-wrap:wrap}
+.btn-modal-play{flex:1;background:var(--red);color:#fff;font-weight:700;padding:.75rem;border-radius:9px;border:none;cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;gap:.5rem;transition:all .3s;font-family:'Outfit',sans-serif;min-width:120px}
+.btn-modal-play:hover{background:var(--red-dark);transform:scale(1.02)}
+.btn-modal-sec{padding:.75rem 1.3rem;border-radius:9px;border:1px solid rgba(255,255,255,.15);background:transparent;color:#fff;font-size:.85rem;cursor:pointer;display:flex;align-items:center;gap:.4rem;transition:all .3s;font-family:'Outfit',sans-serif}
+.btn-modal-sec:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.3)}
+footer{background:var(--surface);border-top:1px solid var(--border);padding:3rem 4% 1.5rem}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2rem;margin-bottom:2rem}
+.footer-brand .logo-footer{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--red);letter-spacing:2px;text-decoration:none;display:inline-block;margin-bottom:.7rem;filter:drop-shadow(0 0 10px rgba(229,9,20,.4))}
+.footer-desc{font-size:.84rem;color:var(--muted);line-height:1.6}
+.footer-heading{font-size:.76rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.9rem}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:.55rem}
+.footer-links a{color:rgba(255,255,255,.45);text-decoration:none;font-size:.84rem;transition:color .3s}
+.footer-links a:hover{color:var(--text)}
+.footer-bottom{border-top:1px solid var(--border);padding-top:1.4rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
+.footer-bottom span{font-size:.78rem;color:rgba(255,255,255,.28)}
+@media(max-width:768px){.nav-links{display:none}.hamburger{display:block}.page-hero{height:260px}.movies-grid{grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:1rem}.filter-bar{padding:.8rem 3%}.section-wrap{padding:2rem 3% .5rem}.footer-grid{grid-template-columns:1fr}}
+@media(max-width:480px){.movies-grid{grid-template-columns:repeat(2,1fr);gap:.85rem}.page-hero-title{font-size:2.2rem}}
+</style>
+</head>
+<body>
+<nav class="navbar" id="mainNav">
+  <div class="navbar-bg-gradient"></div>
+  <a href="main.html" class="logo">Movieblast</a>
+  <ul class="nav-links">
+    <li><a href="main.html">Home</a></li>
+    <li><a href="telugu.html">Telugu</a></li>
+    <li><a href="hindi.html" class="active">Hindi</a></li>
+    <li><a href="english.html">English</a></li>
+    <li><a href="about.html">About</a></li>
+  </ul>
+</nav>
+<div class="toast-wrap" id="toastWrap"></div>
+<div class="filter-bar">
+  <div class="search-wrap"><i class="fas fa-search"></i><input type="text" id="searchInput" placeholder="Search Hindi movies…" oninput="filterMovies()"></div>
+  <div class="genre-pills">
+    <button class="genre-pill active" onclick="setGenre(this,'all')">All</button>
+    <button class="genre-pill" onclick="setGenre(this,'action')">Action</button>
+    <button class="genre-pill" onclick="setGenre(this,'drama')">Drama</button>
+    <button class="genre-pill" onclick="setGenre(this,'comedy')">Comedy</button>
+    <button class="genre-pill" onclick="setGenre(this,'thriller')">Thriller</button>
+    <button class="genre-pill" onclick="setGenre(this,'romance')">Romance</button>
+    <button class="genre-pill" onclick="setGenre(this,'horror')">Horror</button>
+  </div>
+  <select class="sort-select" id="sortSelect" onchange="filterMovies()"><option value="latest">Latest First</option><option value="rating">Top Rated</option><option value="az">A – Z</option></select>
+</div>
+<div class="section-wrap">
+  <div class="section-header">
+    <div class="section-title"><span></span></div>
+    <div class="movie-count-badge" id="countBadge"></div>
+  </div>
+  <div class="movies-grid" id="moviesGrid"></div>
+</div>
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand"><a href="main.html" class="logo-footer">Movieblast</a><p class="footer-desc">India's ultimate OTT platform. Telugu, Hindi, English, and more — all in one place. Stream anywhere, anytime.</p></div>
+    <div><div class="footer-heading">Browse</div><ul class="footer-links"><li><a href="main.html">Home</a></li><li><a href="telugu.html">Telugu Movies</a></li><li><a href="hindi.html">Hindi Movies</a></li><li><a href="english.html">English Movies</a></li><li><a href="about.html">About Us</a></li></ul></div>
+    <div><div class="footer-heading">Account</div><ul class="footer-links"><li><a href="signup.html">Sign Up</a></li><li><a href="signin.html">Sign In</a></li></ul></div>
+
+  </div>
+  <div class="footer-bottom"><span>© 2026 Movieblast. All rights reserved.</span><span>Made with ❤️ in India</span></div>
+</footer>
+<div class="modal fade" id="movieModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-poster-wrap">
+        <img id="modalImg" src="" alt="" onerror="this.style.display='none';document.getElementById('modalArtFallback').style.display='flex'">
+        <div id="modalArtFallback" class="modal-poster-art" style="display:none">🎭</div>
+        <div class="modal-overlay-grad"></div>
+        <button class="modal-close-btn" data-bs-dismiss="modal"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <h2 class="modal-film-title" id="modalTitle"></h2>
+        <div class="d-flex align-items-center gap-3 flex-wrap" style="font-size:.82rem;color:var(--muted)">
+          <span style="color:#4caf50;font-weight:700" id="modalMatch"></span><span id="modalYear"></span><span id="modalDur"></span>
+          <span style="background:var(--surface3);padding:.1rem .5rem;border-radius:3px;color:#ccc;font-size:.7rem" id="modalCert"></span>
+          <span style="color:var(--gold);font-weight:700" id="modalRating"></span>
+        </div>
+        <div class="modal-tags-row" id="modalTags"></div>
+        <p class="modal-desc" id="modalDesc"></p>
+        <p class="modal-cast"><strong>Starring:</strong> <span id="modalCast"></span></p>
+        <div class="modal-actions">
+          <button class="btn-modal-play" onclick="showToast('▶ Now Playing…');bootstrap.Modal.getInstance(document.getElementById('movieModal')).hide()"><i class="fas fa-play"></i> Play Now</button>
+          <button class="btn-modal-sec" onclick="showToast('✓ Added to Watchlist')"><i class="fas fa-plus"></i> Watchlist</button>
+          <button class="btn-modal-sec" onclick="showToast('👍 Liked!')"><i class="fas fa-thumbs-up"></i></button>
+          <button class="btn-modal-sec" onclick="showToast('🔗 Copied!')"><i class="fas fa-share-alt"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const hindiMovies=[
+  {id:0,title:"12th Fail",year:2023,genre:"drama",rating:9.1,dur:"2h 27m",cert:"U/A",tag:"MUST WATCH",match:"99%",poster:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtQlFndd0IkabQnHQ_WZpjyExluv_ty-jXNA&s",desc:"The extraordinary true story of IPS officer Manoj Kumar Sharma, who failed his 12th board exams but never stopped believing in himself.",cast:"Vikrant Massey, Medha Shankar, Anshuman Pushkar",tags:["Drama","Biopic","Inspiring"]},
+  {id:1,title:"Animal",year:2023,genre:"action",rating:8.0,dur:"3h 21m",cert:"A",tag:"HIT",match:"97%",poster:"https://upload.wikimedia.org/wikipedia/en/thumb/9/90/Animal_%282023_film%29_poster.jpg/250px-Animal_%282023_film%29_poster.jpg",desc:"Ranvijay Singh becomes an obsessively violent man driven by his complex love-hate relationship with his powerful father.",cast:"Ranbir Kapoor, Anil Kapoor, Bobby Deol, Rashmika Mandanna",tags:["Action","Drama","Dark"]},
+  {id:2,title:"Jawan",year:2023,genre:"action",rating:7.1,dur:"2h 49m",cert:"U/A",tag:"HIT",match:"92%",poster:"https://m.media-amazon.com/images/M/MV5BMGExNGI1NDktOWI2Mi00NDM3LWIxMmQtNTQxYTgzMzI0MTA1XkEyXkFqcGc@._V1_.jpg",desc:"A high-octane action thriller which outlines the emotional journey of a man set to rectify the wrongs in society.",cast:"Shah Rukh Khan, Nayanthara, Vijay Sethupathi, Deepika Padukone",tags:["Action","Thriller"]},
+  {id:3,title:"Stree 2",year:2024,genre:"horror",rating:8.5,dur:"2h 30m",cert:"U/A",tag:"NEW",match:"98%",poster:"https://m.media-amazon.com/images/M/MV5BZTEyYzVjYjEtNWYzZi00NWRhLTgyZjUtNDlkZjBiNWIxYTEwXkEyXkFqcGc@._V1_.jpg",desc:"The ghost Stree returns as Chanderi faces a new terrifying supernatural threat — Sarkata, a headless spirit that abducts men.",cast:"Rajkummar Rao, Shraddha Kapoor, Aparshakti Khurana, Tamannaah",tags:["Horror","Comedy","Supernatural"]},
+  {id:4,title:"Pathaan",year:2023,genre:"action",rating:6.6,dur:"2h 26m",cert:"U/A",tag:"",match:"88%",poster:"https://m.media-amazon.com/images/M/MV5BOTE5M2UzOWUtOTM0My00YmM5LTg1NmItOWI1MGYwNTdmMjRhXkEyXkFqcGc@._V1_.jpg",desc:"India's most dangerous spy returns after years in the cold and races against time to stop a deadly attack planned by a rogue agent.",cast:"Shah Rukh Khan, Deepika Padukone, John Abraham",tags:["Action","Spy","Thriller"]},
+  {id:5,title:"Laapataa Ladies",year:2024,genre:"drama",rating:8.1,dur:"2h 1m",cert:"U/A",tag:"ACCLAIMED",match:"96%",poster:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpmW488GuP-nn3a9RCuwTPRNxpFoCkLQFnwA&s",desc:"Two newly-wed brides get accidentally swapped on a train in rural India and must find their way back to their homes.",cast:"Nitanshi Goel, Pratibha Ranta, Sparsh Shrivastava, Ravi Kishan",tags:["Drama","Comedy","Social"]},
+  {id:6,title:"Sam Bahadur",year:2023,genre:"drama",rating:8.0,dur:"2h 41m",cert:"U/A",tag:"",match:"93%",poster:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3sbaTLIt5gVostyKgca-CT9cEBiVg-iInCg&s",desc:"The extraordinary story of Field Marshal Sam Manekshaw and his role in the 1971 Indo-Pakistani War.",cast:"Vicky Kaushal, Sanya Malhotra, Fatima Sana Shaikh",tags:["Drama","Biopic","War"]},
+  {id:7,title:"Article 370",year:2024,genre:"thriller",rating:8.1,dur:"2h 28m",cert:"U/A",tag:"",match:"94%",poster:"https://upload.wikimedia.org/wikipedia/en/thumb/b/b2/Article_370_film_poster.jpeg/250px-Article_370_film_poster.jpeg",desc:"A dedicated government official works tirelessly to ensure the abrogation of Article 370 in Jammu & Kashmir.",cast:"Yami Gautam, Priya Mani, Arun Govil",tags:["Thriller","Political","Drama"]},
+  {id:8,title:"Bhool Bhulaiyaa 3",year:2024,genre:"horror",rating:7.2,dur:"2h 42m",cert:"U/A",tag:"NEW",match:"88%",poster:"https://m.media-amazon.com/images/M/MV5BMGFhMDQ4MzMtMTUxOC00NDE0LTkzZWMtMzhhMGNiMDlhNDNmXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",desc:"Rooh Baba is back and faces a terrifying encounter with the original Manjulika in a haunted haveli.",cast:"Kartik Aaryan, Vidya Balan, Madhuri Dixit, Triptii Dimri",tags:["Horror","Comedy","Mystery"]},
+  {id:9,title:"Fighter",year:2024,genre:"action",rating:6.8,dur:"2h 46m",cert:"U/A",tag:"",match:"84%",poster:"https://m.media-amazon.com/images/M/MV5BMzlmOGU5MDYtODVhZC00ZGEzLThjNmEtNTgyYjQ2ZTQwNWYzXkEyXkFqcGc@._V1_.jpg",desc:"India's top Air Force fighter pilots work together to protect the country and gain justice for their fallen comrades.",cast:"Hrithik Roshan, Deepika Padukone, Anil Kapoor",tags:["Action","Military","Patriotic"]},
+  {id:10,title:"Rocky Aur Rani Kii Prem Kahaani",year:2023,genre:"romance",rating:7.0,dur:"2h 49m",cert:"U/A",tag:"",match:"85%",poster:"https://m.media-amazon.com/images/M/MV5BYTE2YTZlODgtMTRiNS00YjZkLTljN2YtNTM3ZTQ2MzcwZGNiXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",desc:"A love story between Rocky, a macho but sensitive man, and Rani, a sophisticated journalist from a very different world.",cast:"Ranveer Singh, Alia Bhatt, Dharmendra, Jaya Bachchan",tags:["Romance","Drama","Family"]},
+  {id:11,title:"Dunki",year:2023,genre:"drama",rating:6.4,dur:"2h 41m",cert:"U/A",tag:"",match:"82%",poster:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-rNKHqPJGryf4MSzt5Xyhye3-eVO8tBphXA&s",desc:"A group of friends from Punjab attempt illegal immigration to England via the Donkey route in this heartwarming story.",cast:"Shah Rukh Khan, Taapsee Pannu, Vicky Kaushal, Boman Irani",tags:["Drama","Comedy","Emotion"]},
+  {id:12,title:"Sector 36",year:2024,genre:"thriller",rating:7.5,dur:"2h 14m",cert:"A",tag:"2024",match:"91%",poster:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqkLr6w9AoYX75m7sSAD8N45W--ASCY3xq9A&s",desc:"Inspired by real events, a determined police officer digs into the horrifying disappearances and murders of children in a Delhi slum.",cast:"Vikrant Massey, Deepak Dobriyal",tags:["Crime","Thriller","Dark"]},
+  {id:13,title:"CTRL",year:2024,genre:"thriller",rating:7.1,dur:"1h 40m",cert:"U/A",tag:"2024",match:"89%",poster:"https://m.media-amazon.com/images/M/MV5BNGI5MjMzODQtMDlhMi00MWU0LTk0MzAtZmY4ZmU4NzU1MmY5XkEyXkFqcGc@._V1_.jpg",desc:"A young woman uses a cutting-edge AI tool to erase her ex-partner from her life — with deeply terrifying consequences.",cast:"Ananya Panday, Vihaan Samat",tags:["Thriller","Tech","Drama"]},
+  {id:14,title:"Sam Bahadur (Remastered)",year:2023,genre:"drama",rating:8.2,dur:"2h 41m",cert:"U/A",tag:"4K",match:"95%",poster:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTuvoRJbClMbKhlkq1av95DoU2-UDtyE87e-g&s",desc:"A special 4K remastered edition of the acclaimed biopic on India's first Field Marshal, Sam Manekshaw.",cast:"Vicky Kaushal, Sanya Malhotra, Fatima Sana Shaikh",tags:["Drama","Biopic","History"]},
+];
+
+let activeGenre='all';
+function tagClass(tag){if(!tag)return'';const t=tag.toLowerCase();if(t==='new'||t==='2024')return'card-tag new-tag';if(['classic','must watch','acclaimed'].includes(t))return'card-tag classic-tag';return'card-tag';}
+function buildCard(m,delay=0){return`<div class="movie-card" onclick="openModal(${m.id})" style="animation-delay:${delay}s"><div class="card-poster"><img src="${m.poster}" alt="${m.title}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/><div style="display:none;width:100%;height:100%;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(145deg,#0d0010,#1a0018);font-size:3rem;position:absolute;inset:0">🎭<div style="font-family:'Bebas Neue',sans-serif;font-size:.85rem;letter-spacing:2px;color:rgba(255,255,255,.8);margin-top:.5rem;text-align:center;padding:0 .5rem">${m.title.toUpperCase()}</div></div>${m.tag?`<span class="${tagClass(m.tag)}">${m.tag}</span>`:''}<span class="card-rating"><i class="fas fa-star" style="font-size:.58rem"></i>${m.rating}</span><div class="card-overlay"><div class="card-actions"><button class="ca-btn play" onclick="event.stopPropagation();showToast('▶ Playing ${m.title.replace(/'/g,"\\'")}…')"><i class="fas fa-play" style="margin-left:1px"></i></button><button class="ca-btn" onclick="event.stopPropagation();showToast('✓ Added to Watchlist')"><i class="fas fa-plus"></i></button><button class="ca-btn" onclick="event.stopPropagation();showToast('👍 Liked!')"><i class="fas fa-thumbs-up"></i></button></div><div class="card-ov-title">${m.title}</div><div class="card-ov-meta">${m.year} · ${m.tags[0]}</div></div></div><div class="card-footer"><h6>${m.title}</h6><p>${m.year} · ${m.tags[0]}</p></div></div>`;}
+function filterMovies(){let data=[...hindiMovies];if(activeGenre!=='all')data=data.filter(m=>m.genre===activeGenre);const q=document.getElementById('searchInput').value.toLowerCase().trim();if(q)data=data.filter(m=>m.title.toLowerCase().includes(q)||m.cast.toLowerCase().includes(q)||m.tags.some(t=>t.toLowerCase().includes(q)));const sort=document.getElementById('sortSelect').value;if(sort==='rating')data.sort((a,b)=>b.rating-a.rating);else if(sort==='az')data.sort((a,b)=>a.title.localeCompare(b.title));else data.sort((a,b)=>b.year-a.year);document.getElementById('countBadge').textContent=`${data.length} Movie${data.length!==1?'s':''}`;document.getElementById('moviesGrid').innerHTML=data.map((m,i)=>buildCard(m,i*0.04)).join('');}
+function setGenre(el,genre){document.querySelectorAll('.genre-pill').forEach(p=>p.classList.remove('active'));el.classList.add('active');activeGenre=genre;filterMovies();}
+function openModal(id){const m=hindiMovies.find(x=>x.id===id);if(!m)return;const img=document.getElementById('modalImg');img.src=m.poster;img.alt=m.title;img.style.display='block';document.getElementById('modalArtFallback').style.display='none';document.getElementById('modalTitle').textContent=m.title;document.getElementById('modalMatch').textContent=m.match+' Match';document.getElementById('modalYear').textContent=m.year;document.getElementById('modalDur').textContent=m.dur;document.getElementById('modalCert').textContent=m.cert;document.getElementById('modalRating').innerHTML=`<i class="fas fa-star" style="font-size:.7rem;margin-right:.18rem"></i>${m.rating}`;document.getElementById('modalDesc').textContent=m.desc;document.getElementById('modalCast').textContent=m.cast;document.getElementById('modalTags').innerHTML=m.tags.map(t=>`<span class="modal-tag">${t}</span>`).join('');new bootstrap.Modal(document.getElementById('movieModal')).show();}
+window.addEventListener('scroll',()=>{document.getElementById('mainNav').classList.toggle('scrolled',window.scrollY>60);});
+function showToast(msg){const w=document.getElementById('toastWrap');const t=document.createElement('div');t.className='toast-item';t.textContent=msg;w.appendChild(t);setTimeout(()=>t.remove(),2600);}
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.querySelectorAll('.movie-card').forEach((c,i)=>{c.style.opacity='0';c.style.transform='translateY(22px)';setTimeout(()=>{c.style.transition='opacity .5s ease,transform .5s ease';c.style.opacity='1';c.style.transform='translateY(0)';},i*50);});}});},{threshold:.08});
+obs.observe(document.getElementById('moviesGrid'));
+filterMovies();
+</script>
+</body>
+</html>

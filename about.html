@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Movieblast – About Us</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{
+  --red:#e50914;--red-dark:#b00710;--gold:#f5a623;
+  --bg:#0a0a0a;--surface:#141414;--surface2:#1f1f1f;--surface3:#2a2a2a;
+  --text:#fff;--muted:#aaa;--border:rgba(255,255,255,.1);--nav-h:68px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:#111}::-webkit-scrollbar-thumb{background:var(--red);border-radius:3px}
+
+/* NAVBAR */
+.navbar{position:fixed;top:0;left:0;right:0;z-index:1000;height:var(--nav-h);padding:0 4%;display:flex;align-items:center;justify-content:space-between;transition:background .4s,box-shadow .4s}
+.navbar.scrolled{background:rgba(10,10,10,.97);box-shadow:0 2px 20px rgba(0,0,0,.5)}
+.navbar-bg{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.9),transparent);z-index:-1}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;color:var(--red);letter-spacing:2px;text-decoration:none;filter:drop-shadow(0 0 15px rgba(229,9,20,.5));animation:logoPulse 3s ease-in-out infinite}
+@keyframes logoPulse{0%,100%{filter:drop-shadow(0 0 15px rgba(229,9,20,.4))}50%{filter:drop-shadow(0 0 30px rgba(229,9,20,.9))}}
+.nav-links{display:flex;align-items:center;gap:.2rem;list-style:none}
+.nav-links a{color:rgba(255,255,255,.75);text-decoration:none;font-size:.9rem;font-weight:500;padding:.5rem .9rem;border-radius:8px;transition:all .3s;position:relative}
+.nav-links a:hover,.nav-links a.active{color:#fff}
+.nav-links a.active::after{content:'';position:absolute;bottom:-2px;left:50%;transform:translateX(-50%);width:20px;height:3px;background:var(--red);border-radius:2px}
+.nav-right{display:flex;align-items:center;gap:1rem}
+.nav-avatar{width:36px;height:36px;border-radius:8px;background:var(--red);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem;cursor:pointer;transition:transform .3s}
+.nav-avatar:hover{transform:scale(1.1)}
+.hamburger{display:none;background:none;border:none;color:var(--text);font-size:1.3rem;cursor:pointer}
+
+/* HERO */
+.about-hero{
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:8rem 4% 5rem;position:relative;overflow:hidden;
+}
+/* animated red glow orbs */
+.orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:.12;pointer-events:none}
+.orb-1{width:500px;height:500px;background:var(--red);top:-120px;left:-120px;animation:drift1 18s ease-in-out infinite alternate}
+.orb-2{width:400px;height:400px;background:var(--gold);bottom:-100px;right:-100px;animation:drift2 14s ease-in-out infinite alternate}
+@keyframes drift1{from{transform:translate(0,0)}to{transform:translate(80px,60px)}}
+@keyframes drift2{from{transform:translate(0,0)}to{transform:translate(-60px,-50px)}}
+
+/* subtle grid */
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(229,9,20,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(229,9,20,.04) 1px,transparent 1px);background-size:60px 60px;pointer-events:none}
+
+.hero-eyebrow{display:inline-flex;align-items:center;gap:.5rem;background:rgba(229,9,20,.15);border:1px solid rgba(229,9,20,.35);border-radius:20px;padding:.32rem .9rem;font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--red);margin-bottom:1.2rem;animation:fadeUp .8s .1s both}
+.hero-headline{font-family:'Bebas Neue',sans-serif;font-size:clamp(3.5rem,9vw,7rem);line-height:.92;letter-spacing:2px;margin-bottom:1.2rem;animation:fadeUp .8s .2s both}
+.hero-headline em{color:var(--red);font-style:normal}
+.hero-sub{color:var(--muted);font-size:1rem;line-height:1.7;max-width:560px;margin:0 auto 2.4rem;animation:fadeUp .8s .3s both}
+.hero-cta-row{display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;animation:fadeUp .8s .4s both}
+.btn-primary{display:inline-flex;align-items:center;gap:.6rem;background:var(--red);color:#fff;border:none;border-radius:10px;padding:.8rem 2rem;font-family:'Outfit',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;transition:all .3s;text-decoration:none}
+.btn-primary:hover{background:var(--red-dark);transform:scale(1.05);box-shadow:0 8px 25px rgba(229,9,20,.4);color:#fff}
+.btn-ghost{display:inline-flex;align-items:center;gap:.6rem;background:transparent;color:#fff;border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:.8rem 1.8rem;font-family:'Outfit',sans-serif;font-weight:600;font-size:.92rem;cursor:pointer;transition:all .3s;text-decoration:none;backdrop-filter:blur(8px)}
+.btn-ghost:hover{border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.07);color:#fff}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+/* STATS ROW */
+.stats-row{
+  display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:0;
+  background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:2rem 4%;
+}
+.stat-cell{flex:1;min-width:140px;text-align:center;padding:1rem 1.5rem;border-right:1px solid var(--border)}
+.stat-cell:last-child{border-right:none}
+.stat-num{font-family:'Bebas Neue',sans-serif;font-size:2.8rem;color:var(--gold);letter-spacing:1px;line-height:1}
+.stat-label{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:1.2px;margin-top:.2rem}
+
+/* MISSION */
+.mission-section{padding:5rem 4%;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;max-width:1100px;margin:0 auto}
+.mission-label{font-size:.72rem;color:var(--red);font-weight:700;letter-spacing:3px;text-transform:uppercase;display:flex;align-items:center;gap:.6rem;margin-bottom:.7rem}
+.mission-label::before{content:'';width:20px;height:2px;background:var(--red);border-radius:1px}
+.mission-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,4vw,3rem);letter-spacing:1px;line-height:1;margin-bottom:1.2rem}
+.mission-body{color:var(--muted);font-size:.92rem;line-height:1.8}
+/* visual side */
+.mission-visual{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.mv-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.4rem;transition:all .3s}
+.mv-card:hover{border-color:rgba(229,9,20,.3);transform:translateY(-4px)}
+.mv-icon{font-size:1.8rem;margin-bottom:.6rem}
+.mv-title{font-weight:700;font-size:.88rem;margin-bottom:.3rem}
+.mv-body{font-size:.76rem;color:var(--muted);line-height:1.6}
+.mv-card.span2{grid-column:span 2}
+
+/* TEAM */
+.team-section{padding:4rem 4%;background:var(--surface);border-top:1px solid var(--border)}
+.section-center{text-align:center;margin-bottom:2.5rem}
+.section-center h2{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:1px;margin-bottom:.4rem}
+.section-center p{color:var(--muted);font-size:.88rem}
+.team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.2rem;max-width:900px;margin:0 auto}
+.team-card{background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:1.6rem 1.2rem;text-align:center;transition:all .3s}
+.team-card:hover{border-color:rgba(229,9,20,.3);transform:translateY(-5px);box-shadow:0 15px 35px rgba(0,0,0,.4)}
+.team-avatar{width:64px;height:64px;border-radius:50%;margin:0 auto 1rem;font-size:1.8rem;display:flex;align-items:center;justify-content:center;position:relative}
+.team-avatar::before{content:'';position:absolute;inset:-3px;border-radius:50%;background:conic-gradient(var(--red),var(--gold),var(--red));z-index:-1;animation:spin 4s linear infinite}
+.team-avatar-inner{width:100%;height:100%;border-radius:50%;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:1.8rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+.team-name{font-weight:700;font-size:.92rem;margin-bottom:.2rem}
+.team-role{font-size:.74rem;color:var(--red);font-weight:600;letter-spacing:.5px;margin-bottom:.5rem}
+.team-bio{font-size:.74rem;color:var(--muted);line-height:1.55}
+
+/* FOOTER */
+footer{background:var(--surface);border-top:1px solid var(--border);padding:3rem 4% 1.5rem}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2rem;margin-bottom:2rem}
+.footer-brand .logo{display:block;margin-bottom:.8rem;font-size:2rem}
+.footer-desc{font-size:.84rem;color:var(--muted);line-height:1.6}
+.footer-heading{font-size:.76rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.9rem}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:.55rem}
+.footer-links a{color:rgba(255,255,255,.45);text-decoration:none;font-size:.84rem;transition:color .3s}
+.footer-links a:hover{color:var(--text)}
+.footer-bottom{border-top:1px solid var(--border);padding-top:1.4rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
+.footer-bottom span{font-size:.78rem;color:rgba(255,255,255,.28)}
+
+/* TOAST */
+.toast-wrap{position:fixed;top:var(--nav-h);left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;align-items:center;gap:.5rem;pointer-events:none}
+.toast-item{background:rgba(20,20,20,.97);border:1px solid var(--border);border-radius:20px;padding:.6rem 1.3rem;font-size:.84rem;white-space:nowrap;box-shadow:0 8px 25px rgba(0,0,0,.5);animation:toastPop .4s cubic-bezier(.22,1,.36,1) both;font-family:'Outfit',sans-serif}
+@keyframes toastPop{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .nav-links{display:none}.hamburger{display:block}
+  .mission-section{grid-template-columns:1fr;gap:2.5rem;padding:3rem 4%}
+  .footer-grid{grid-template-columns:1fr}
+  .stat-cell{border-right:none;border-bottom:1px solid var(--border);padding:.8rem}
+  .stat-cell:last-child{border-bottom:none}
+  .stats-row{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="mainNav">
+  <div class="navbar-bg"></div>
+  <a href="main.html" class="logo">Movieblast</a>
+  <ul class="nav-links">
+    <li><a href="main.html">Home</a></li>
+    <li><a href="telugu.html">Telugu</a></li>
+    <li><a href="hindi.html">Hindi</a></li>
+    <li><a href="english.html">English</a></li>
+    <li><a href="about.html" class="active">About</a></li>
+  </ul>
+</nav>
+
+<!-- TOAST -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- ══ HERO ══ -->
+<section class="about-hero">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="hero-grid"></div>
+
+  <h1 class="hero-headline">
+    CINEMA FOR<br/><em>EVERY SOUL</em>
+  </h1>
+  <p class="hero-sub">
+    Movieblast is India's ultimate streaming home — built for people who breathe cinema. Telugu blockbusters, Hindi dramas, Hollywood epics — all in one place, in stunning 4K.
+  </p>
+  <div class="hero-cta-row">
+    <a href="main.html" class="btn-primary"><i class="fas fa-play"></i> Start Watching</a>
+    <a href="signup.html" class="btn-ghost"><i class="fas fa-user-plus"></i> Join Free</a>
+  </div>
+</section>
+
+<!-- ══ STATS ══ -->
+<div class="stats-row">
+  <div class="stat-cell">
+    <div class="stat-num">3K+</div>
+    <div class="stat-label">Movies &amp; Shows</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-num">5M+</div>
+    <div class="stat-label">Happy Users</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-num">12</div>
+    <div class="stat-label">Languages</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-num">4K</div>
+    <div class="stat-label">Ultra HD</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-num">99%</div>
+    <div class="stat-label">Uptime</div>
+  </div>
+</div>
+
+<!-- ══ MISSION ══ -->
+<section class="mission-section">
+  <!-- left text -->
+  <div>
+    <div class="mission-label">Our Mission</div>
+    <h2 class="mission-title">GREAT STORIES<br/>DESERVE TO BE SEEN</h2>
+    <p class="mission-body">
+      We started Movieblast because we believed every great film deserved a great home. From Tollywood action epics to intimate Hindi dramas to Oscar-winning Hollywood classics — we curate, restore, and stream cinema at its absolute finest.<br/><br/>
+      No ads. No compromise. Just cinema.
+    </p>
+  </div>
+  <!-- right cards -->
+  <div class="mission-visual">
+    <div class="mv-card">
+      <div class="mv-icon">🎬</div>
+      <div class="mv-title">Massive Library</div>
+      <div class="mv-body">3,000+ titles. New films every Friday.</div>
+    </div>
+    <div class="mv-card">
+      <div class="mv-icon">⚡</div>
+      <div class="mv-title">Zero Buffering</div>
+      <div class="mv-body">CDN-powered. Adaptive up to 4K.</div>
+    </div>
+    <div class="mv-card">
+      <div class="mv-icon">📱</div>
+      <div class="mv-title">Any Screen</div>
+      <div class="mv-body">TV, phone, tablet — one subscription.</div>
+    </div>
+    <div class="mv-card">
+      <div class="mv-icon">🔒</div>
+      <div class="mv-title">100% Ad-Free</div>
+      <div class="mv-body">Premium plans have zero interruptions.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ TEAM ══ -->
+<section class="team-section">
+  <div class="section-center">
+    <h2>The man Behind Movieblast</h2>
+    <p>Built by film lovers, for film lovers.</p>
+  </div>
+  <div class="team-grid">
+    <div class="team-card">
+      <div class="team-avatar"><div class="team-avatar-inner">👨‍💼</div></div>
+      <div class="team-name">Jaideep</div>
+      <div class="team-role">CEO &amp; Founder</div>
+      <div class="team-bio"> Passionate about Telugu cinema &amp; scalable tech.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="main.html" class="logo">Movieblast</a>
+      <p class="footer-desc">India's ultimate OTT platform. Telugu, Hindi, English, and more — all in one place. Stream anywhere, anytime.</p>
+    </div>
+    <div>
+      <div class="footer-heading">Browse</div>
+      <ul class="footer-links">
+        <li><a href="main.html">Home</a></li>
+        <li><a href="telugu.html">Telugu Movies</a></li>
+        <li><a href="hindi.html">Hindi Movies</a></li>
+        <li><a href="english.html">English Movies</a></li>
+        <li><a href="about.html">About Us</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-heading">Account</div>
+      <ul class="footer-links">
+        <li><a href="signup.html">Sign Up</a></li>
+        <li><a href="signin.html">Sign In</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Movieblast. All rights reserved.</span>
+    <span>Made with ❤️ in India</span>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+window.addEventListener('scroll', () => {
+  document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 60);
+});
+
+function showToast(msg) {
+  const w = document.getElementById('toastWrap');
+  const t = document.createElement('div');
+  t.className = 'toast-item';
+  t.textContent = msg;
+  w.appendChild(t);
+  setTimeout(() => t.remove(), 2500);
+}
+
+/* Animate elements on scroll */
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('.mv-card, .team-card, .stat-cell').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(20px)';
+  el.style.transition = 'opacity .6s ease, transform .6s ease';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>

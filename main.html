@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Movieblast – Home</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{
+  --red:#e50914;--red-dark:#b00710;--gold:#f5a623;
+  --bg:#0a0a0a;--surface:#141414;--surface2:#1f1f1f;--surface3:#2a2a2a;
+  --text:#fff;--muted:#aaa;--border:rgba(255,255,255,.1);
+  --nav-h:68px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:#111}::-webkit-scrollbar-thumb{background:var(--red);border-radius:3px}
+
+/* NAVBAR */
+.navbar{position:fixed;top:0;left:0;right:0;z-index:1000;height:var(--nav-h);padding:0 4%;display:flex;align-items:center;justify-content:space-between;transition:background .4s,box-shadow .4s}
+.navbar.scrolled{background:rgba(10,10,10,.97);box-shadow:0 2px 20px rgba(0,0,0,.5)}
+.navbar-bg-gradient{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.9) 0%,transparent 100%);z-index:-1;pointer-events:none}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;color:var(--red);letter-spacing:2px;text-decoration:none;filter:drop-shadow(0 0 15px rgba(229,9,20,.5));animation:logoPulse 3s ease-in-out infinite}
+@keyframes logoPulse{0%,100%{filter:drop-shadow(0 0 15px rgba(229,9,20,.4))}50%{filter:drop-shadow(0 0 30px rgba(229,9,20,.9))}}
+.nav-links{display:flex;align-items:center;gap:.2rem;list-style:none}
+.nav-links a{color:rgba(255,255,255,.75);text-decoration:none;font-size:.9rem;font-weight:500;padding:.5rem .9rem;border-radius:8px;transition:all .3s;position:relative}
+.nav-links a:hover,.nav-links a.active{color:#fff}
+.nav-links a.active::after{content:'';position:absolute;bottom:-2px;left:50%;transform:translateX(-50%);width:20px;height:3px;background:var(--red);border-radius:2px}
+.nav-right{display:flex;align-items:center;gap:1rem}
+.nav-avatar{width:36px;height:36px;border-radius:8px;background:var(--red);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem;cursor:pointer;transition:transform .3s,box-shadow .3s}
+.nav-avatar:hover{transform:scale(1.1);box-shadow:0 0 15px rgba(229,9,20,.4)}
+.hamburger{display:none;background:none;border:none;color:var(--text);font-size:1.3rem;cursor:pointer}
+
+/* ══════════════════════════
+   HERO CAROUSEL
+══════════════════════════ */
+.hero{position:relative;height:95vh;min-height:600px;overflow:hidden}
+
+/* The sliding strip — JS sets transform */
+.hero-slides{
+  display:flex;
+  height:100%;
+  /* transition controlled here so JS doesn't need to set it */
+  transition:transform .8s cubic-bezier(.22,1,.36,1);
+  will-change:transform;
+}
+
+.hero-slide{
+  min-width:100%;
+  height:100%;
+  position:relative;
+  flex-shrink:0;
+}
+
+.hero-bg{
+  position:absolute;inset:0;
+  background-size:cover;
+  background-position:center top;
+  transition:transform 8s ease;
+}
+/* Subtle Ken-Burns on active slide */
+.hero-slide.active .hero-bg{transform:scale(1.05)}
+
+.hero-overlay{
+  position:absolute;inset:0;
+  background:
+    linear-gradient(to right,rgba(0,0,0,.88) 0%,rgba(0,0,0,.5) 50%,rgba(0,0,0,.1) 100%),
+    linear-gradient(to top,rgba(0,0,0,.9) 0%,rgba(0,0,0,.1) 50%,rgba(0,0,0,.3) 100%);
+}
+
+.hero-content{
+  position:relative;z-index:2;height:100%;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding-bottom:8rem;padding-left:4%;max-width:700px;
+  opacity:0;transform:translateY(30px);
+  transition:opacity .7s ease,transform .7s ease;
+}
+/* JS adds this class to the active slide's content */
+.hero-content.visible{opacity:1;transform:translateY(0)}
+
+.hero-badge{
+  display:inline-flex;align-items:center;gap:.4rem;
+  background:rgba(229,9,20,.2);border:1px solid rgba(229,9,20,.4);
+  border-radius:20px;padding:.3rem .8rem;
+  font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--red);margin-bottom:.8rem;
+}
+.hero-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(3rem,7vw,6rem);line-height:1;letter-spacing:2px;
+  margin-bottom:.8rem;text-shadow:0 4px 30px rgba(0,0,0,.5);
+}
+.hero-meta{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;flex-wrap:wrap}
+.hero-meta span{font-size:.85rem;color:rgba(255,255,255,.7)}
+.hero-meta .rating{color:var(--gold);font-weight:700}
+.hero-meta .quality{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:4px;padding:.15rem .5rem;font-size:.75rem;font-weight:700}
+.hero-desc{font-size:.95rem;color:rgba(255,255,255,.75);line-height:1.6;margin-bottom:1.8rem;max-width:550px}
+.hero-actions{display:flex;gap:.8rem;flex-wrap:wrap}
+.btn-play{display:inline-flex;align-items:center;gap:.7rem;background:#fff;color:#000;border:none;border-radius:10px;padding:.85rem 2rem;font-family:'Outfit',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;transition:all .3s}
+.btn-play:hover{background:rgba(255,255,255,.85);transform:scale(1.05)}
+.btn-more{display:inline-flex;align-items:center;gap:.7rem;background:rgba(100,100,100,.5);color:#fff;border:none;border-radius:10px;padding:.85rem 1.8rem;font-family:'Outfit',sans-serif;font-weight:600;font-size:1rem;cursor:pointer;backdrop-filter:blur(10px);transition:all .3s}
+.btn-more:hover{background:rgba(100,100,100,.7);transform:scale(1.05)}
+.btn-watchlist{width:46px;height:46px;background:rgba(100,100,100,.4);border:2px solid rgba(255,255,255,.3);border-radius:10px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;transition:all .3s;backdrop-filter:blur(10px)}
+.btn-watchlist:hover{border-color:#fff;background:rgba(255,255,255,.1)}
+
+/* DOTS */
+.hero-dots{position:absolute;bottom:3rem;left:4%;z-index:3;display:flex;gap:.5rem;align-items:center}
+.hero-dot{width:8px;height:8px;border-radius:4px;background:rgba(255,255,255,.3);cursor:pointer;transition:all .4s}
+.hero-dot.active{width:28px;background:var(--red)}
+
+/* ARROWS */
+.hero-arrow{
+  position:absolute;top:50%;transform:translateY(-50%);z-index:3;
+  background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.15);
+  color:#fff;border-radius:50%;width:50px;height:50px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:1.1rem;transition:all .3s;
+  backdrop-filter:blur(10px);
+}
+.hero-arrow:hover{background:rgba(229,9,20,.5);border-color:var(--red)}
+.hero-arrow.left{left:2rem}
+.hero-arrow.right{right:2rem}
+
+/* LANGUAGE CARDS */
+.lang-section{padding:4rem 4%;background:linear-gradient(to bottom,var(--bg),var(--surface) 50%,var(--bg))}
+.lang-section-title{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:1px;margin-bottom:.5rem;text-align:center}
+.lang-section-sub{text-align:center;color:var(--muted);font-size:.95rem;margin-bottom:3rem}
+.lang-cards-wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;max-width:900px;margin:0 auto}
+.lang-card{position:relative;border-radius:20px;overflow:hidden;cursor:pointer;aspect-ratio:16/9;transition:transform .4s cubic-bezier(.22,1,.36,1),box-shadow .4s}
+.lang-card:hover{transform:scale(1.04) translateY(-6px);box-shadow:0 25px 60px rgba(0,0,0,.7)}
+.lang-card-bg{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .5s}
+.lang-card:hover .lang-card-bg{transform:scale(1.08)}
+.lang-card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.85) 0%,rgba(0,0,0,.2) 60%,rgba(0,0,0,.1) 100%);transition:background .3s}
+.lang-card:hover .lang-card-overlay{background:linear-gradient(to top,rgba(0,0,0,.9) 0%,rgba(0,0,0,.4) 60%,rgba(0,0,0,.2) 100%)}
+.lang-card-content{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;justify-content:flex-end;padding:1.2rem 1.5rem}
+.lang-card-title{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:1px;line-height:1}
+.lang-card-count{font-size:.8rem;color:rgba(255,255,255,.6);margin-top:.2rem}
+.lang-card-arrow{position:absolute;top:1rem;right:1rem;width:36px;height:36px;background:rgba(255,255,255,.1);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;transform:scale(0);transition:transform .3s}
+.lang-card:hover .lang-card-arrow{transform:scale(1)}
+
+/* FEATURES */
+.features-section{padding:4rem 4%;background:var(--surface)}
+.features-title{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:1px;margin-bottom:.5rem;text-align:center}
+.features-sub{text-align:center;color:var(--muted);margin-bottom:3rem}
+.features-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem}
+.feature-card{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:1.8rem;text-align:center;transition:all .3s;cursor:default}
+.feature-card:hover{border-color:rgba(229,9,20,.3);background:rgba(229,9,20,.05);transform:translateY(-4px);box-shadow:0 15px 40px rgba(0,0,0,.3)}
+.feature-icon{width:60px;height:60px;background:rgba(229,9,20,.15);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;color:var(--red);margin:0 auto 1rem;transition:all .3s}
+.feature-card:hover .feature-icon{background:rgba(229,9,20,.25);transform:scale(1.1)}
+.feature-title{font-weight:700;font-size:.95rem;margin-bottom:.4rem}
+.feature-desc{font-size:.82rem;color:var(--muted);line-height:1.6}
+
+/* TOAST */
+.toast-wrap{position:fixed;top:var(--nav-h);left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;align-items:center;gap:.5rem;pointer-events:none}
+.toast-item{background:rgba(20,20,20,.97);border:1px solid var(--border);border-radius:20px;padding:.6rem 1.2rem;font-size:.85rem;white-space:nowrap;box-shadow:0 8px 25px rgba(0,0,0,.5);animation:toastPop .4s cubic-bezier(.22,1,.36,1)}
+@keyframes toastPop{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+
+/* FOOTER */
+footer{background:var(--surface);border-top:1px solid var(--border);padding:3rem 4% 1.5rem}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2rem;margin-bottom:2rem}
+.footer-brand .logo{display:block;margin-bottom:.8rem;font-size:2rem}
+.footer-desc{font-size:.85rem;color:var(--muted);line-height:1.6;margin-bottom:1rem}
+.footer-heading{font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:.6rem}
+.footer-links a{color:rgba(255,255,255,.5);text-decoration:none;font-size:.85rem;transition:color .3s}
+.footer-links a:hover{color:var(--text)}
+.footer-bottom{border-top:1px solid var(--border);padding-top:1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
+.footer-bottom span{font-size:.8rem;color:rgba(255,255,255,.3)}
+
+/* RESPONSIVE */
+@media(max-width:1024px){.features-grid{grid-template-columns:repeat(2,1fr)}.footer-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:768px){
+  .nav-links{display:none}.hamburger{display:block}
+  .hero-title{font-size:3rem}
+  .lang-cards-wrap{grid-template-columns:1fr;max-width:400px}
+  .features-grid{grid-template-columns:repeat(2,1fr)}
+  .footer-grid{grid-template-columns:1fr}
+  .hero-arrow{display:none}
+}
+@media(max-width:480px){.features-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="mainNav">
+  <div class="navbar-bg-gradient"></div>
+  <a href="main.html" class="logo">Movieblast</a>
+  <ul class="nav-links">
+    <li><a href="home.html" class="active">Home</a></li>
+    <li><a href="telugu.html">Telugu</a></li>
+    <li><a href="hindi.html">Hindi</a></li>
+    <li><a href="english.html">English</a></li>
+    <li><a href="about.html">About</a></li>
+  </ul>
+</nav>
+
+<!-- TOAST -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- ══════════════════════════════
+     HERO CAROUSEL — 5 SLIDES
+══════════════════════════════ -->
+<section class="hero" id="heroSection">
+  <div class="hero-slides" id="heroSlides">
+
+    <!-- Slide 1 — Kalki 2898 AD -->
+    <div class="hero-slide" id="slide-0">
+      <div class="hero-bg" style="background-image:url('https://m.media-amazon.com/images/S/pv-target-images/8e0d90bcbc47ad1528ed1d1f0b0e88bfdf31125fa46acf0201fafa3250b40eac.png')"></div>
+      <div class="hero-overlay"></div>
+      <div class="hero-content" id="content-0">
+        <div class="hero-title">Kalki 2898 AD</div>
+        <div class="hero-meta">
+          <span class="rating"><i class="fas fa-star"></i> 8.4</span>
+          <span>2024</span><span>•</span><span>3h 1m</span><span>•</span>
+          <span class="quality">4K UHD</span><span class="quality">HDR</span>
+        </div>
+        <p class="hero-desc">A mythological sci-fi epic set in the distant future, where the avatar of Vishnu is prophesied to appear on Earth — blending ancient mythology with futuristic action in a visual spectacle like no other.</p>
+      </div>
+    </div>
+
+    <!-- Slide 2 — Pushpa: The Rule -->
+    <div class="hero-slide" id="slide-1">
+      <div class="hero-bg" style="background-image:url('https://images.indianexpress.com/2025/01/pushpa-2-box-office.jpg?w=1200')"></div>
+      <div class="hero-overlay"></div>
+      <div class="hero-content" id="content-1">
+        <div class="hero-title">Pushpa: The Rule</div>
+        <div class="hero-meta">
+          <span class="rating"><i class="fas fa-star"></i> 8.0</span>
+          <span>2024</span><span>•</span><span>3h 22m</span><span>•</span>
+          <span class="quality">HDR</span><span class="quality">Dolby</span>
+        </div>
+        <p class="hero-desc">Pushpa Raj builds his smuggling empire to its peak while facing the ruthless SP Bhanwar Singh Shekawat. The explosive sequel to the blockbuster Pushpa: The Rise raises the stakes sky-high.</p>
+      </div>
+    </div>
+
+    <!-- Slide 3 — Dhurandhar -->
+    <div class="hero-slide" id="slide-2">
+      <div class="hero-bg" style="background-image:url('https://www.hindustantimes.com/ht-img/img/2026/03/02/original/dhura_1772434942678_1772434950204.webp')"></div>
+      <div class="hero-overlay"></div>
+      <div class="hero-content" id="content-2">
+        <div class="hero-title">Dhurandhar</div>
+        <div class="hero-meta">
+          <span class="rating"><i class="fas fa-star"></i> 9.3</span>
+          <span>2025</span><span>•</span><span>3h</span><span>•</span>
+          <span class="quality">IMAX</span><span class="quality">4K</span>
+        </div>
+        <p class="hero-desc">Ranveer Singh stars as an undercover Indian agent who infiltrates Karachi's Lyari underworld to dismantle a Pakistan-based terror network in this high-octane spy thriller from the director of Uri.</p>
+      </div>
+    </div>
+
+    <!-- Slide 4 — Dune: Part Two -->
+    <div class="hero-slide" id="slide-3">
+      <div class="hero-bg" style="background-image:url('https://m.media-amazon.com/images/M/MV5BNTY5MWQxZTUtNWFjNC00Nzk5LThiM2EtNDk0NGRlYzQwY2U4XkEyXkFqcGdeQXZ3ZXNsZXk@._V1_.jpg');background-position:center center"></div>
+      <div class="hero-overlay"></div>
+      <div class="hero-content" id="content-3">
+        <div class="hero-title">Dune: Part Two</div>
+        <div class="hero-meta">
+          <span class="rating"><i class="fas fa-star"></i> 8.5</span>
+          <span>2024</span><span>•</span><span>2h 46m</span><span>•</span>
+          <span class="quality">IMAX</span><span class="quality">4K</span>
+        </div>
+        <p class="hero-desc">Paul Atreides unites with Chani and the Fremen while on a warpath of revenge against the conspirators who destroyed his family — facing a choice between the love of his life and the fate of the universe.</p>
+      
+      </div>
+    </div>
+
+    <!-- Slide 5 — RRR -->
+    <div class="hero-slide" id="slide-4">
+      <div class="hero-bg" style="background-image:url('https://i.ytimg.com/vi/HKN6FAKjFPU/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLC0dTbv2cJfBfO9fxe54mnxNjC60g');background-position:center top"></div>
+      <div class="hero-overlay"></div>
+      <div class="hero-content" id="content-4">
+        <div class="hero-title">RRR</div>
+        <div class="hero-meta">
+          <span class="rating"><i class="fas fa-star"></i> 8.0</span>
+          <span>2022</span><span>•</span><span>3h 7m</span><span>•</span>
+          <span class="quality">4K UHD</span><span class="quality">HDR</span>
+        </div>
+        <p class="hero-desc">A fictional story about two legendary revolutionaries — Alluri Sitarama Raju and Komaram Bheem — and their incredible journey before they took up arms against British rule to become icons of Indian history.</p>
+      </div>
+    </div>
+
+  </div><!-- /hero-slides -->
+
+  <!-- Dots (5) -->
+  <div class="hero-dots" id="heroDots">
+    <div class="hero-dot" onclick="goToSlide(0)"></div>
+    <div class="hero-dot" onclick="goToSlide(1)"></div>
+    <div class="hero-dot" onclick="goToSlide(2)"></div>
+    <div class="hero-dot" onclick="goToSlide(3)"></div>
+    <div class="hero-dot" onclick="goToSlide(4)"></div>
+  </div>
+
+  <!-- Arrows -->
+  <button class="hero-arrow left"  onclick="slideHero(-1)"><i class="fas fa-chevron-left"></i></button>
+  <button class="hero-arrow right" onclick="slideHero(1)"><i class="fas fa-chevron-right"></i></button>
+</section>
+
+<!-- LANGUAGE CARDS -->
+<section class="lang-section">
+  <h2 class="lang-section-title">Choose Your Language</h2>
+  <p class="lang-section-sub">Discover hundreds of movies in your favorite language</p>
+  <div class="lang-cards-wrap">
+    <a href="telugu.html" style="text-decoration:none;color:inherit">
+      <div class="lang-card">
+        <div class="lang-card-bg" style="background-image:url('https://static.toiimg.com/thumb/msid-67288446,width-400,resizemode-4/67288446.jpg')"></div>
+        <div class="lang-card-overlay"></div>
+        <div class="lang-card-content">
+          <div class="lang-card-title">Telugu</div>
+          <div class="lang-card-count">850+ Movies &amp; Series</div>
+        </div>
+        <div class="lang-card-arrow"><i class="fas fa-arrow-right"></i></div>
+      </div>
+    </a>
+    <a href="hindi.html" style="text-decoration:none;color:inherit">
+      <div class="lang-card">
+        <div class="lang-card-bg" style="background-image:url('https://indianfilm.epizy.com/wp-content/uploads/2022/05/Copy-of-800-x-500-Blog-Post-13-5.png')"></div>
+        <div class="lang-card-overlay"></div>
+        <div class="lang-card-content">
+          <div class="lang-card-title">Hindi</div>
+          <div class="lang-card-count">1200+ Movies &amp; Series</div>
+        </div>
+        <div class="lang-card-arrow"><i class="fas fa-arrow-right"></i></div>
+      </div>
+    </a>
+    <a href="english.html" style="text-decoration:none;color:inherit">
+      <div class="lang-card">
+        <div class="lang-card-bg" style="background-image:url('https://wallpaperaccess.com/full/3658597.jpg')"></div>
+        <div class="lang-card-overlay"></div>
+        <div class="lang-card-content">
+          <div class="lang-card-title">English</div>
+          <div class="lang-card-count">2000+ Movies &amp; Series</div>
+        </div>
+        <div class="lang-card-arrow"><i class="fas fa-arrow-right"></i></div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features-section">
+  <h2 class="features-title">Why Movieblast?</h2>
+  <p class="features-sub">Everything you need for the ultimate streaming experience</p>
+  <div class="features-grid">
+    <div class="feature-card"><div class="feature-icon"><i class="fas fa-film"></i></div><div class="feature-title">4K Ultra HD</div><div class="feature-desc">Crystal-clear picture quality with Dolby Vision HDR and Dolby Atmos surround sound.</div></div>
+    <div class="feature-card"><div class="feature-icon"><i class="fas fa-download"></i></div><div class="feature-title">Download &amp; Watch</div><div class="feature-desc">Save movies and episodes to watch offline — perfect for flights and travel.</div></div>
+    <div class="feature-card"><div class="feature-icon"><i class="fas fa-users"></i></div><div class="feature-title">Family Profiles</div><div class="feature-desc">Create up to 5 profiles. Kids mode with parental controls built in.</div></div>
+    <div class="feature-card"><div class="feature-icon"><i class="fas fa-globe"></i></div><div class="feature-title">Multi-Language</div><div class="feature-desc">Telugu, Hindi, English, Tamil, Kannada, Malayalam — all in one place.</div></div>
+    <div class="feature-card"><div class="feature-icon"><i class="fas fa-mobile-alt"></i></div><div class="feature-title">Any Device</div><div class="feature-desc">Watch on TV, laptop, tablet, or phone. Seamless casting to big screen.</div></div>
+    <div class="feature-card"><div class="feature-icon"><i class="fas fa-bolt"></i></div><div class="feature-title">No Interruptions</div><div class="feature-desc">Zero ads on Standard and Premium plans. Pure uninterrupted streaming.</div></div>
+    <div class="feature-card"><div class="feature-icon"><i class="fas fa-brain"></i></div><div class="feature-title">Smart Recommendations</div><div class="feature-desc">AI-powered suggestions based on your watch history and preferences.</div></div>
+    <div class="feature-card"><div class="feature-icon"><i class="fas fa-shield-alt"></i></div><div class="feature-title">Secure &amp; Private</div><div class="feature-desc">Your data is encrypted. Cancel anytime with no hidden fees.</div></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="main.html" class="logo">Movieblast</a>
+      <p class="footer-desc">India's ultimate OTT platform. Telugu, Hindi, English, and more — all in one place. Stream anywhere, anytime.</p>
+    </div>
+    <div>
+      <div class="footer-heading">Browse</div>
+      <ul class="footer-links">
+        <li><a href="main.html">Home</a></li>
+        <li><a href="telugu.html">Telugu Movies</a></li>
+        <li><a href="hindi.html">Hindi Movies</a></li>
+        <li><a href="english.html">English Movies</a></li>
+        <li><a href="about.html">About Us</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-heading">Account</div>
+      <ul class="footer-links">
+        <li><a href="signup.html">Sign Up</a></li>
+        <li><a href="signin.html">Sign In</a></li>
+      </ul>
+    </div>
+  
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Movieblast. All rights reserved.</span>
+    <span>Made with ❤️ in India</span>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+/* ════════════════════════════════════════
+   HERO CAROUSEL — complete implementation
+════════════════════════════════════════ */
+const TOTAL   = 5;
+let current   = 0;
+let autoTimer = null;
+
+const slidesEl  = document.getElementById('heroSlides');
+const dots      = document.querySelectorAll('.hero-dot');
+const contents  = document.querySelectorAll('.hero-content');
+const slides    = document.querySelectorAll('.hero-slide');
+
+function goToSlide(idx) {
+  /* wrap around */
+  if (idx < 0)      idx = TOTAL - 1;
+  if (idx >= TOTAL) idx = 0;
+
+  /* 1 — remove active state from old slide */
+  slides[current].classList.remove('active');
+  contents[current].classList.remove('visible');
+  dots[current].classList.remove('active');
+
+  current = idx;
+
+  /* 2 — move the strip */
+  slidesEl.style.transform = `translateX(-${current * 100}%)`;
+
+  /* 3 — activate new slide */
+  slides[current].classList.add('active');
+  dots[current].classList.add('active');
+
+  /* 4 — animate content in (slight delay so translate finishes first) */
+  setTimeout(() => {
+    contents[current].classList.add('visible');
+  }, 120);
+
+  /* 5 — restart auto-play */
+  clearInterval(autoTimer);
+  autoTimer = setInterval(() => goToSlide(current + 1), 5500);
+}
+
+/* Called by arrow buttons */
+function slideHero(dir) {
+  goToSlide(current + dir);
+}
+
+/* Keyboard */
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')  goToSlide(current - 1);
+  if (e.key === 'ArrowRight') goToSlide(current + 1);
+});
+
+/* Touch / swipe */
+let touchX = 0;
+document.getElementById('heroSection').addEventListener('touchstart', e => {
+  touchX = e.changedTouches[0].clientX;
+}, { passive: true });
+document.getElementById('heroSection').addEventListener('touchend', e => {
+  const diff = touchX - e.changedTouches[0].clientX;
+  if (Math.abs(diff) > 50) goToSlide(current + (diff > 0 ? 1 : -1));
+}, { passive: true });
+
+/* Navbar scroll */
+window.addEventListener('scroll', () => {
+  document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 60);
+});
+
+/* Toast */
+function showToast(msg) {
+  const w = document.getElementById('toastWrap');
+  const t = document.createElement('div');
+  t.className = 'toast-item';
+  t.textContent = msg;
+  w.appendChild(t);
+  setTimeout(() => t.remove(), 2500);
+}
+
+/* ── INIT: show first slide ── */
+goToSlide(0);
+</script>
+</body>
+</html>

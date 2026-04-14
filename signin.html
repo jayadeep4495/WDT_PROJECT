@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StreamVerse – Sign In</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{--red:#e50914;--bg:#0a0a0a;--surface:#141414;--surface2:#1f1f1f;--text:#fff;--muted:#aaa;--border:rgba(255,255,255,.1)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+
+/* BG with animated hero poster mosaic */
+.bg-wrap{position:fixed;inset:0;z-index:0}
+.bg-mosaic{position:absolute;inset:0;display:grid;grid-template-columns:repeat(6,1fr);grid-template-rows:repeat(4,1fr);gap:2px;opacity:.18}
+.mosaic-cell{background:var(--surface2);border-radius:4px;overflow:hidden;animation:mosaicPulse ease-in-out infinite alternate}
+@keyframes mosaicPulse{from{opacity:.6}to{opacity:1}}
+.bg-overlay{position:absolute;inset:0;background:
+  radial-gradient(ellipse 70% 70% at 50% 50%,rgba(0,0,0,.85) 0%,rgba(0,0,0,.4) 100%),
+  linear-gradient(to bottom,rgba(0,0,0,.8) 0%,rgba(0,0,0,.3) 50%,rgba(0,0,0,.8) 100%)}
+
+/* Floating orbs */
+.orb{position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0;animation:orbFloat ease-in-out infinite alternate}
+@keyframes orbFloat{from{transform:translate(0,0)}to{transform:translate(30px,20px)}}
+
+/* Topbar */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.2rem 4%;background:linear-gradient(to bottom,rgba(0,0,0,.95),transparent);display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:2.4rem;color:var(--red);letter-spacing:2px;text-decoration:none;filter:drop-shadow(0 0 20px rgba(229,9,20,.6));animation:logoPulse 3s ease-in-out infinite}
+@keyframes logoPulse{0%,100%{filter:drop-shadow(0 0 20px rgba(229,9,20,.4))}50%{filter:drop-shadow(0 0 40px rgba(229,9,20,.9))}}
+.topbar-actions{display:flex;gap:1rem;align-items:center}
+.lang-select{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:.35rem .7rem;color:var(--text);font-family:'Outfit',sans-serif;font-size:.82rem;cursor:pointer}
+
+/* Page */
+.page-wrap{position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:7rem 1rem 3rem}
+
+/* Card */
+.auth-card{background:rgba(0,0,0,.78);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:3rem 3.5rem;width:100%;max-width:460px;backdrop-filter:blur(30px);box-shadow:0 40px 100px rgba(0,0,0,.9);animation:cardEnter .9s cubic-bezier(.22,1,.36,1) both}
+@keyframes cardEnter{from{opacity:0;transform:translateY(50px)}to{opacity:1;transform:translateY(0)}}
+
+.auth-title{font-family:'Bebas Neue',sans-serif;font-size:2.8rem;letter-spacing:1px;margin-bottom:.3rem}
+.auth-sub{color:var(--muted);font-size:.9rem;margin-bottom:2rem}
+
+/* Fields */
+.field-wrap{position:relative;margin-bottom:1.4rem;opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease}
+.field-wrap label{display:block;font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.45rem;transition:color .3s}
+.field-wrap:focus-within label{color:var(--red)}
+.field-wrap input{width:100%;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.12);border-radius:10px;padding:.9rem 1rem .9rem 3rem;color:var(--text);font-size:.95rem;font-family:'Outfit',sans-serif;transition:all .3s;outline:none}
+.field-wrap input:focus{border-color:var(--red);background:rgba(229,9,20,.07);box-shadow:0 0 0 3px rgba(229,9,20,.15)}
+.field-wrap input.is-invalid{border-color:#f44;background:rgba(255,68,68,.05)}
+.fi{position:absolute;left:1rem;bottom:.95rem;color:rgba(255,255,255,.3);font-size:.9rem;pointer-events:none;transition:color .3s}
+.field-wrap:focus-within .fi{color:var(--red)}
+.eye-btn{position:absolute;right:1rem;bottom:.9rem;background:none;border:none;color:rgba(255,255,255,.3);cursor:pointer;transition:color .3s;font-size:.9rem}
+.eye-btn:hover{color:var(--red)}
+.field-err{font-size:.76rem;color:#f66;margin-top:.3rem;display:none;animation:shake .3s ease}
+.field-err.show{display:block}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+
+/* Remember / Forgot */
+.rf-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+.rf-row label{font-size:.83rem;color:var(--muted);display:flex;align-items:center;gap:.5rem;cursor:pointer}
+.rf-row input[type=checkbox]{accent-color:var(--red);width:15px;height:15px}
+.forgot-link{font-size:.83rem;color:var(--red);text-decoration:none}
+.forgot-link:hover{text-decoration:underline}
+
+/* Btn */
+.btn-login{width:100%;background:var(--red);border:none;border-radius:10px;padding:1rem;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;letter-spacing:.05em;color:#fff;cursor:pointer;position:relative;overflow:hidden;transition:all .3s}
+.btn-login::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);transition:left .5s}
+.btn-login:hover::before{left:100%}
+.btn-login:hover{background:#f40612;transform:translateY(-2px);box-shadow:0 8px 30px rgba(229,9,20,.5)}
+
+/* Divider */
+.divider{display:flex;align-items:center;gap:1rem;margin:1.6rem 0;color:var(--muted);font-size:.82rem}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.1)}
+
+/* Social */
+.social-row{display:flex;gap:.8rem}
+.btn-social{flex:1;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.1);border-radius:10px;padding:.7rem;color:var(--text);font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.5rem;transition:all .3s}
+.btn-social:hover{border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.08);transform:translateY(-2px)}
+
+
+
+/* Error banner */
+.error-banner{background:rgba(255,68,68,.12);border:1px solid rgba(255,68,68,.3);border-radius:10px;padding:.85rem 1rem;font-size:.87rem;color:#ff8080;display:none;margin-bottom:1.2rem;animation:cardEnter .3s ease}
+.error-banner.show{display:flex;align-items:center;gap:.6rem}
+
+/* Signup link */
+.signup-link{text-align:center;margin-top:1.8rem;font-size:.88rem;color:var(--muted)}
+.signup-link a{color:var(--red);text-decoration:none;font-weight:600}
+.signup-link a:hover{text-decoration:underline}
+
+/* Toast */
+.toast-wrap{position:fixed;top:1.5rem;right:1.5rem;z-index:9999;display:flex;flex-direction:column;gap:.5rem}
+.toast-item{background:var(--surface2);border:1px solid var(--border);border-left:4px solid var(--red);border-radius:10px;padding:.9rem 1.2rem;font-size:.88rem;min-width:280px;box-shadow:0 10px 30px rgba(0,0,0,.5);animation:toastIn .4s cubic-bezier(.22,1,.36,1)}
+.toast-item.success{border-left-color:#2ed573}
+@keyframes toastIn{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
+
+/* Loader */
+.loader-overlay{position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,.9);display:none;place-items:center;flex-direction:column;gap:1.5rem}
+.loader-overlay.show{display:grid}
+.load-logo{font-family:'Bebas Neue',sans-serif;font-size:3rem;color:var(--red);letter-spacing:3px;animation:logoPulse 1s ease-in-out infinite}
+.spinner{width:50px;height:50px;border:3px solid rgba(255,255,255,.1);border-top-color:var(--red);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+@media(max-width:576px){.auth-card{padding:2rem 1.5rem}.auth-title{font-size:2.2rem}}
+</style>
+</head>
+<body>
+
+<!-- BG -->
+<div class="bg-wrap">
+  <div class="bg-mosaic" id="bgMosaic"></div>
+  <div class="bg-overlay"></div>
+</div>
+
+<!-- Orbs -->
+<div class="orb" style="width:300px;height:300px;background:rgba(229,9,20,.15);top:-50px;left:-80px;animation-duration:6s"></div>
+<div class="orb" style="width:200px;height:200px;background:rgba(229,9,20,.1);bottom:100px;right:50px;animation-duration:8s;animation-delay:2s"></div>
+
+<!-- Topbar -->
+<div class="topbar">
+  <a href="home.html" class="logo">MovieBlast</a>
+  
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+<div class="loader-overlay" id="loaderOverlay">
+  <div class="load-logo">StreamVerse</div>
+  <div class="spinner"></div>
+  <span style="color:#666;font-size:.9rem">Signing you in…</span>
+</div>
+
+<div class="page-wrap">
+  <div class="auth-card">
+
+    <h1 class="auth-title">Welcome Back</h1>
+    <p class="auth-sub">Sign in to continue watching</p>
+
+    
+
+    <!-- Error banner -->
+    <div class="error-banner" id="errorBanner">
+      <i class="fas fa-exclamation-circle"></i>
+      <span id="errorMsg">Invalid email or password.</span>
+    </div>
+
+    <form id="loginForm" novalidate>
+
+      <div class="field-wrap">
+        <label>Email Address</label>
+        <i class="fas fa-envelope fi"></i>
+        <input type="email" id="email" placeholder="your@email.com">
+        <div class="field-err" id="emailErr">Please enter a valid email.</div>
+      </div>
+
+      <div class="field-wrap">
+        <label>Password</label>
+        <i class="fas fa-lock fi"></i>
+        <input type="password" id="password" placeholder="Your password">
+        <button type="button" class="eye-btn" onclick="togglePw('password',this)"><i class="fas fa-eye"></i></button>
+        <div class="field-err" id="pwErr">Please enter your password.</div>
+      </div>
+
+      <div class="rf-row">
+        <label><input type="checkbox" id="remember"> Remember me</label>
+      </div>
+
+      <a href="main.html">
+  <button type="button" class="btn-login">Sign In</button>
+</a>
+
+    </form>
+
+    <div class="signup-link">New to StreamVerse? <a href="signup.html">Create Account</a></div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+/* Mosaic BG */
+(()=>{
+  const grid=document.getElementById('bgMosaic');
+  const colors=['#1a0a0a','#0a0a1a','#1a1a0a','#0a1a0a','#1a0a1a','#141414','#1f1010','#101020'];
+  for(let i=0;i<24;i++){
+    const d=document.createElement('div');
+    d.className='mosaic-cell';
+    d.style.background=colors[Math.floor(Math.random()*colors.length)];
+    d.style.animationDuration=(3+Math.random()*5)+'s';
+    d.style.animationDelay=(Math.random()*4)+'s';
+    grid.appendChild(d);
+  }
+})();
+
+
+
+/* Toggle pw */
+function togglePw(id,btn){const i=document.getElementById(id),ic=btn.querySelector('i');i.type=i.type==='password'?'text':'password';ic.classList.toggle('fa-eye');ic.classList.toggle('fa-eye-slash');}
+
+/* Toast */
+function toast(msg,type='error'){const w=document.getElementById('toastWrap');const t=document.createElement('div');t.className='toast-item '+(type==='success'?'success':'');t.textContent=msg;w.appendChild(t);setTimeout(()=>t.remove(),3500);}
+
+
+
+
+/* Stagger */
+document.querySelectorAll('.field-wrap').forEach((el,i)=>setTimeout(()=>{el.style.opacity='1';el.style.transform='translateY(0)';},500+i*100));
+</script>
+</body>
+</html>
